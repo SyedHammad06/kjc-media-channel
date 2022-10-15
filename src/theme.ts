@@ -37,11 +37,11 @@ const theme = createTheme({
     },
     h5: {
       fontSize: '1.5rem',
-      fontWeight: 300,
+      fontWeight: 400,
     },
     h6: {
       fontSize: '1.2rem',
-      fontWeight: 200,
+      fontWeight: 400,
     },
   },
 });
