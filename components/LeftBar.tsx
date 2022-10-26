@@ -40,12 +40,12 @@ export const LeftBar: NextPage = () => {
     {
       icon: <Notes fontSize='large' />,
       text: 'Posts',
-      link: `${userId}`,
+      link: `posts`,
     },
     {
       icon: <Event fontSize='large' />,
       text: 'Events',
-      link: `events/${userId}`,
+      link: `events`,
     },
     {
       icon: <Business fontSize='large' />,

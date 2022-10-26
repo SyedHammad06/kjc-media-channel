@@ -156,7 +156,7 @@ export const RightBar: NextPage = () => {
                       },
                     }}
                   >
-                    <Delete />
+                    <Delete color='secondary' />
                   </Box>
                 ) : null}
               </Paper>

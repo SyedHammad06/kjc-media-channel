@@ -39,7 +39,7 @@ export default function Home() {
         );
         if (admin.data.id) {
           setUserId(admin.data.id);
-          router.push(`${admin.data.id}`);
+          router.push(`posts`);
         }
       } catch (error: any) {
         try {
@@ -48,7 +48,7 @@ export default function Home() {
           );
           if (user.data.id) {
             setUserId(user.data.id);
-            router.push(`${user.data.id}`);
+            router.push(`posts`);
           }
         } catch (error) {
           setError('User not found!');
