@@ -7,16 +7,17 @@ import createEmotionCache from '../src/createEmotionCache';
 export default class MyDocument extends Document {
   render() {
     return (
-      <Html lang="en">
+      <Html lang='en'>
         <Head>
           {/* PWA primary color */}
-          <meta name="theme-color" content={theme.palette.primary.main} />
-          <link rel="shortcut icon" href="/favicon.ico" />
+          <meta name='theme-color' content={theme.palette.primary.main} />
+          <link rel='shortcut icon' href='/logo.ico' />
           <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+            rel='stylesheet'
+            href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap'
           />
-          <meta name="emotion-insertion-point" content="" />
+          <meta name='emotion-insertion-point' content='' />
+          <title>KJC Media Channel</title>
           {(this.props as any).emotionStyleTags}
         </Head>
         <body>

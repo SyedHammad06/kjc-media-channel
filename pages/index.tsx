@@ -17,13 +17,12 @@ import Link from '@mui/material/Link';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
+import { ErrorDisplay } from '../components/ErrorDisplay';
 
 export default function Home() {
   const router = useRouter();
 
-  const { setUserId } = useAuth();
+  const { userId, setUserId } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -40,7 +39,7 @@ export default function Home() {
         );
         if (admin.data.id) {
           setUserId(admin.data.id);
-          router.push('/home');
+          router.push(`${admin.data.id}`);
         }
       } catch (error: any) {
         try {
@@ -49,7 +48,7 @@ export default function Home() {
           );
           if (user.data.id) {
             setUserId(user.data.id);
-            router.push('/home');
+            router.push(`${user.data.id}`);
           }
         } catch (error) {
           setError('User not found!');
@@ -218,17 +217,7 @@ export default function Home() {
           />
         </Box>
       </Box>
-      {error ? (
-        <Snackbar
-          open={error ? true : false}
-          autoHideDuration={6000}
-          onClose={() => setError('')}
-        >
-          <Alert severity='error' variant='filled' onClose={() => setError('')}>
-            {error}
-          </Alert>
-        </Snackbar>
-      ) : null}
+      {error ? <ErrorDisplay error={error} setError={setError} /> : null}
     </>
   );
 }

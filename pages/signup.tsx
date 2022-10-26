@@ -23,8 +23,7 @@ import { NextPage } from 'next';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useAuth } from '../context/AuthContext';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
+import { ErrorDisplay } from '../components/ErrorDisplay';
 
 type departmentsType = {
   value: string;
@@ -372,17 +371,7 @@ const Signup: NextPage = () => {
           </Box>
         </Box>
       </Box>
-      {error ? (
-        <Snackbar
-          open={error ? true : false}
-          autoHideDuration={4000}
-          onClose={() => setError('')}
-        >
-          <Alert severity='error' variant='filled' onClose={() => setError('')}>
-            {error}
-          </Alert>
-        </Snackbar>
-      ) : null}
+      {error ? <ErrorDisplay error={error} setError={setError} /> : null}
     </>
   );
 };
