@@ -179,7 +179,7 @@ const EventsPage: NextPage = () => {
                 </Typography>
                 <Typography
                   variant='body2'
-                  component='p'
+                  component='div'
                   sx={{
                     color: '#fff',
                     width: '100%',

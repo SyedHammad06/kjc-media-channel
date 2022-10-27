@@ -16,6 +16,15 @@ import IconButton from '@mui/material/IconButton';
 import BarChart from '@mui/icons-material/BarChart';
 import Tooltip from '@mui/material/Tooltip';
 import { ErrorDisplay } from '../../components/ErrorDisplay';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import TableCell from '@mui/material/TableCell';
+import DialogContent from '@mui/material/DialogContent';
+import TableContainer from '@mui/material/TableContainer';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import { getTouchRippleUtilityClass, TableBody } from '@mui/material';
 
 type RegistrationType = {
   id: string;
@@ -43,7 +52,8 @@ const EventDetails: NextPage = () => {
   const [event, setEvent] = useState<EventType>();
   const [username, setUsername] = useState('');
   const [admin, setAdmin] = useState(false);
-  const [registrations, setRegisterations] = useState<RegistrationType[]>([]);
+  const [registrations, setRegistrations] = useState<RegistrationType[]>([]);
+  const [showDialog, setShowDialog] = useState(false);
   const [department, setDepartment] = useState('');
   const [registered, setRegistered] = useState(false);
   const [regno, setRegno] = useState('');
@@ -51,14 +61,6 @@ const EventDetails: NextPage = () => {
 
   useEffect(() => {
     (async () => {
-      try {
-        const eventRes = await axios
-          .get(`https://localhost:7168/api/Event/${router.query.id}`)
-          .then((res) => res.data);
-        if (eventRes) setEvent(eventRes);
-      } catch (error: any) {
-        setError(error.message);
-      }
       try {
         const adminRes = await axios
           .get(`https://localhost:7168/api/Admin/${userId}`)
@@ -74,12 +76,24 @@ const EventDetails: NextPage = () => {
           .then((res) => res.data);
         if (userRes) {
           setUsername(userRes.username);
-          setRegno(userRes.regno);
+          setRegno(userRes.regNo);
           setDepartment(userRes.department);
         }
       }
+      getEvents();
     })();
   }, []);
+
+  const getEvents = async () => {
+    try {
+      const eventRes = await axios
+        .get(`https://localhost:7168/api/Event/${router.query.id}`)
+        .then((res) => res.data);
+      if (eventRes) setEvent(eventRes);
+    } catch (error: any) {
+      setError(error.message);
+    }
+  };
 
   const registration = async (id: string) => {
     try {
@@ -93,11 +107,18 @@ const EventDetails: NextPage = () => {
           username: username,
           department: department,
         };
+        console.log(body);
         const registrationRes = await axios.post(
           'https://localhost:7168/api/Registration',
           body
         );
-        if (registrationRes) setRegistered(true);
+        if (registrationRes) {
+          setRegistered(true);
+          const updateSlots = await axios.put(
+            `https://localhost:7168/api/Event/slots/${id}/true`
+          );
+          getEvents();
+        }
       }
     } catch (error: any) {
       setError(error.message);
@@ -109,7 +130,7 @@ const EventDetails: NextPage = () => {
       const registrationsRes = await axios
         .get(`https://localhost:7168/api/Registration/${id}`)
         .then((res) => res.data);
-      setRegisterations(registrationsRes);
+      setRegistrations(registrationsRes);
     } catch (error: any) {
       setError(error.message);
     }
@@ -139,7 +160,10 @@ const EventDetails: NextPage = () => {
               <IconButton
                 aria-label='registration details'
                 size='large'
-                onClick={() => getRegistrations(event ? event.id : '')}
+                onClick={() => {
+                  setShowDialog(true);
+                  getRegistrations(event ? event.id : '');
+                }}
               >
                 <BarChart color='primary' fontSize='inherit' />
               </IconButton>
@@ -206,6 +230,56 @@ const EventDetails: NextPage = () => {
           </CustomCard>
         ) : null}
       </Box>
+      <Dialog
+        maxWidth='md'
+        fullWidth
+        open={showDialog}
+        onClose={() => setShowDialog(false)}
+      >
+        <DialogTitle>
+          <Typography
+            color='primary'
+            variant='h6'
+            component='p'
+            sx={{ fontWeight: 500 }}
+          >
+            Registration Details
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <TableContainer>
+            <Table aria-label='registration details'>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Regno</TableCell>
+                  <TableCell>Username</TableCell>
+                  <TableCell>Department</TableCell>
+                  <TableCell>Registration Time</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {registrations.map((el: RegistrationType) => (
+                  <TableRow key={el.id}>
+                    <TableCell>{el.regno}</TableCell>
+                    <TableCell>{el.username}</TableCell>
+                    <TableCell>{el.department}</TableCell>
+                    <TableCell>
+                      {new Date(el.registrationTime).toLocaleString('en-UK', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour12: true,
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </DialogContent>
+      </Dialog>
       {error ? <ErrorDisplay error={error} setError={setError} /> : null}
     </>
   );
