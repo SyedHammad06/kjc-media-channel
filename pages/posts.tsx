@@ -374,7 +374,7 @@ const HomePage: NextPage = () => {
             }}
           />
           <CardContent>
-            <Typography variant='body2' sx={{ textIndent: 20 }}>
+            <Typography variant='body2' sx={{ textIndent: 20, color: '#fff' }}>
               {el.description}
             </Typography>
           </CardContent>

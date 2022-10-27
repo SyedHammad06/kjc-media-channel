@@ -24,7 +24,7 @@ import TableContainer from '@mui/material/TableContainer';
 import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { getTouchRippleUtilityClass, TableBody } from '@mui/material';
+import TableBody from '@mui/material/TableBody';
 
 type RegistrationType = {
   id: string;
